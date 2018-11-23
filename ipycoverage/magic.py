@@ -71,17 +71,18 @@ The coverage module could not be found, install it by running
             glob.update(local_ns)
 
         cov = coverage.Coverage(branch=branch)
-        exc = None
+        exception = None
         try:
             cov.start()
             exec(code, glob, ns)
         except Exception as exc:
             logging.error(exc)
+            exception = exc
         finally:
             cov.stop()
 
-        if exc:
-            return "Failed to run: \n%s\nBecause: %s" % (code, str(exc))
+        if exception:
+            return "Failed to run: \n%s\nBecause: %s" % (code, str(exception))
 
         cov.save()
 

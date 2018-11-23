@@ -19,4 +19,4 @@ install:
   - pip install --upgrade pip
   - pip install -q coverage~=$COVERAGE_VERSION ipython~=$IPYTHON_VERSION
 script:
-  - python setup.py tests
+  - python setup.py test
