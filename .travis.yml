@@ -3,7 +3,8 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-  - "3.7"
+  - "3.7-dev"
+  - "nightly"
 env:
   - COVERAGE_VERSION=4.0 IPYTHON_VERSION=7.0
   - COVERAGE_VERSION=4.0 IPYTHON_VERSION=6.0
@@ -26,6 +27,8 @@ matrix:
     env: COVERAGE_VERSION=4.0 IPYTHON_VERSION=7.0
   - python: "3.4"
     env: COVERAGE_VERSION=3.0 IPYTHON_VERSION=7.0
+  allow_failures:
+  - python: "nightly"
 install:
   - pip install --upgrade pip
   - pip install -q coverage~=$COVERAGE_VERSION ipython~=$IPYTHON_VERSION
