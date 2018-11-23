@@ -1,4 +1,6 @@
 import logging
+import os
+import tempfile
 
 try:
     import coverage
@@ -39,10 +41,6 @@ The coverage module could not be found, install it by running
         help="Measure branch coverage in addition to statement coverage.",
     )
     @magic_arguments.argument(
-        '-i', '--ignore-errors', action='store_true',
-        help="Ignore errors while reading source files.",
-    )
-    @magic_arguments.argument(
         'statement', nargs='*',
         help="""Code call statement to include in the code coverage analysis. 
         You can omit this in cell magic mode.""",
@@ -54,7 +52,6 @@ The coverage module could not be found, install it by running
 
         args = magic_arguments.parse_argstring(self.coverage, line)
         branch = args.branch
-        ignore_errors = args.ignore_errors
 
         code = "\n".join(args.statement)
         if cell:
@@ -74,19 +71,24 @@ The coverage module could not be found, install it by running
             glob.update(local_ns)
 
         cov = coverage.Coverage(branch=branch)
-        cov.start()
-
-        exec(code, glob, ns)
-
-        cov.stop()
-        cov.save()
+        exc = None
         try:
-            cov.html_report()
-            # TODO: make a tempfolder to store and read the HTML results from
-            return display.IFrame("htmlcov/index.html", width="100%", height=600)
+            cov.start()
+            exec(code, glob, ns)
         except Exception as exc:
             logging.error(exc)
-            return code
+        finally:
+            cov.stop()
+
+        if exc:
+            return "Failed to run: \n%s\nBecause: %s" % (code, str(exc))
+
+        cov.save()
+
+        with tempfile.TemporaryDirectory() as directory:
+            cov.html_report(director=directory)
+        # TODO: add options for IFrame display
+        return display.IFrame(os.path.join(directory, "index.html"), width="100%", height=600)
 
 
 def load_ipython_extension(ip):
