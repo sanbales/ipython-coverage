@@ -23,7 +23,7 @@ from IPython.core.magic import (
 class CoverageMagic(Magics):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CoverageMagic, self).__init__(*args, **kwargs)
         if coverage is None:
             self.coverage = self.coverage_missing_notice
         # Default execution function used to actually run user code.

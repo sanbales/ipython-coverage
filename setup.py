@@ -29,7 +29,7 @@ setup(
     keywords='testing coverage ipython',
     license='MIT',
     long_description=README,
-    name='ipython-sql',
+    name='ipython-coverage',
     packages=find_packages('.'),
     test_suite="tests",
     url='https://pypi.python.org/pypi/ipython-coverage',
