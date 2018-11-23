@@ -18,7 +18,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Topic :: Software Development :: Testing',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 2',
     ],
     description="Coverage access via IPython",
     include_package_data=True,
