@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sanbales/ipython-coverage.svg?branch=master)](https://travis-ci.org/sanbales/ipython-coverage)
+
 # IPython Coverage
 Introduces a %coverage (or %%coverage) magic.
 
