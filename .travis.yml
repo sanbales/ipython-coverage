@@ -1,27 +1,17 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
   - "3.3"
   - "3.4"
   - "3.5"
-  - "3.5-dev"  # 3.5 development branch
   - "3.6"
-  - "3.6-dev"  # 3.6 development branch
-  - "3.7-dev"  # 3.7 development branch
+  - "3.7"  # 3.7 development branch
 env:
-  - COVERAGE_VERSION_CAP=5
-  - COVERAGE_VERSION_CAP=4
-  - COVERAGE_VERSION_CAP=3
-  - COVERAGE_VERSION_CAP=2
-  - COVERAGE_VERSION_CAP=1
-  - IPYTHON_VERSION_CAP=7
-  - IPYTHON_VERSION_CAP=6
-  - IPYTHON_VERSION_CAP=5
-  - IPYTHON_VERSION_CAP=4
-  - IPYTHON_VERSION_CAP=3
-  - IPYTHON_VERSION_CAP=2
-  - IPYTHON_VERSION_CAP=1
+  - COVERAGE_VERSION=5
+  - COVERAGE_VERSION=4
+  - COVERAGE_VERSION=3
+  - IPYTHON_VERSION=7
+  - IPYTHON_VERSION=6
 install:
   - pip install -q coverage~=$COVERAGE_VERSION ipython~=$IPYTHON_VERSION
 script:
