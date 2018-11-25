@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/sanbales/ipython-coverage.svg?branch=master)](https://travis-ci.org/sanbales/ipython-coverage)
 
 # IPython Coverage
-Introduces a %coverage (or %%coverage) magic.
+Introduces `%coverage` and `%%coverage` magics to allow running
+of [coverage](https://github.com/nedbat/coveragepy)
+from a [Jupyter Notebook](https://github.com/jupyter/notebook).
 
-Run coverage directly from Jupyter notebook / JupyterLab.
-
-Presents the coverage HTML report as an IFrame.
+It currently presents the coverage HTML report as an IFrame.
 
 # Installation
 ```bash
@@ -16,7 +16,7 @@ pip install ipycoverage
 
 ## Load the extension
 ```ipython
-%load_ext ipycoverage
+%load_ext ipycov
 ```
 
 ## Use the magic
