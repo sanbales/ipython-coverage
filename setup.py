@@ -32,7 +32,7 @@ setup(
     long_description=README,
     name='ipython_coverage',
     packages=find_packages(exclude=('tests',)),
-    test_suite="tests",
+    test_suite="ipython_coverage.tests",
     url='https://pypi.python.org/pypi/ipython-coverage',
     version=version,
     zip_safe=False,

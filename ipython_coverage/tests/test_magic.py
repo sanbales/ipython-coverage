@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from IPython.testing.globalipapp import get_ipython
 
-from ipython_coverage import load_ipython_extension, unload_ipython_extension
+from .. import load_ipython_extension, unload_ipython_extension
 
 
 class TestMagic(TestCase):
