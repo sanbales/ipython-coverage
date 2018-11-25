@@ -1,6 +1,8 @@
 from io import open
-from setuptools import setup, find_packages
 import os
+
+from setuptools import setup, find_packages
+
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md'), encoding='utf-8').read()
@@ -22,13 +24,13 @@ setup(
     description="Coverage access via IPython",
     include_package_data=True,
     install_requires=[
-        'coverage>4,<5',
+        'coverage>=3',
         'ipython>=1.0',
     ],
     keywords='testing coverage ipython',
     license='MIT',
     long_description=README,
-    name='ipython-coverage',
+    name='ipycoverage',
     packages=find_packages('.'),
     test_suite="tests",
     url='https://pypi.python.org/pypi/ipython-coverage',

@@ -1,26 +1,25 @@
 import logging
 import os
-import tempfile
 
 try:
     import coverage
 except ImportError:
     coverage = None
 
-from IPython import display
-from IPython.core import (
-    magic_arguments,
-)
-from IPython.core.magic import (
-    Magics,
-    magics_class,
-    needs_local_scope,
-    line_cell_magic,
-)
+from IPython.display import IFrame
+from IPython.core import magic, magic_arguments
 
 
-@magics_class
-class CoverageMagic(Magics):
+if "sandbox" not in IFrame.iframe:
+    IFrame.iframe = IFrame.iframe.replace(
+        "allowfullscreen\n",
+        "allowfullscreen\n"
+        '            sandbox="allow-forms allow-same-origin allow-scripts"\n'
+    )
+
+
+@magic.magics_class
+class CoverageMagic(magic.Magics):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -37,7 +36,7 @@ The coverage module could not be found, install it by running
 
     @magic_arguments.magic_arguments()
     @magic_arguments.argument(
-        '--branch', action='store_false',
+        '--branch', '-b', action='store_false',
         help="Measure branch coverage in addition to statement coverage.",
     )
     @magic_arguments.argument(
@@ -45,8 +44,8 @@ The coverage module could not be found, install it by running
         help="""Code call statement to include in the code coverage analysis. 
         You can omit this in cell magic mode.""",
     )
-    @line_cell_magic
-    @needs_local_scope
+    @magic.line_cell_magic
+    @magic.needs_local_scope
     def coverage(self, line="", cell=None, local_ns=None):
         """ Run coverage on a line or cell. """
 
@@ -60,21 +59,19 @@ The coverage module could not be found, install it by running
         if not code:
             return
 
-        ns = {}
-        glob = self.shell.user_ns
-        # handles global vars with same name as local vars. We store them in conflict_globs.
+        global_variables = self.shell.user_ns
         if local_ns is not None:
             conflict_globs = {}
-            for var_name, var_val in glob.items():
+            for var_name, var_val in global_variables.items():
                 if var_name in local_ns:
                     conflict_globs[var_name] = var_val
-            glob.update(local_ns)
+            global_variables.update(local_ns)
 
         cov = coverage.Coverage(branch=branch)
         exception = None
         try:
             cov.start()
-            exec(code, glob, ns)
+            exec(code, global_variables, {})
         except Exception as exc:
             logging.error(exc)
             exception = exc
@@ -86,12 +83,11 @@ The coverage module could not be found, install it by running
 
         cov.save()
 
-        with tempfile.TemporaryDirectory() as directory:
-            cov.html_report(director=directory)
+        cov.html_report()
         # TODO: add options for IFrame display
-        return display.IFrame(os.path.join(directory, "index.html"), width="100%", height=600)
+        return IFrame(os.path.join("htmlcov/index.html"), width="100%", height=600)
 
 
-def load_ipython_extension(ip):
+def load_ipython_extension(ipython):
     """Load the extension in IPython."""
-    ip.register_magics(CoverageMagic)
+    ipython.register_magics(CoverageMagic)
