@@ -1,6 +1,6 @@
 from IPython.display import IFrame
 
-from . import magic
+from .magic import CoverageMagic
 
 
 IFRAME_TEMPLATE_SHIM = (
@@ -10,7 +10,7 @@ IFRAME_TEMPLATE_SHIM = (
 
 def load_ipython_extension(ipython):
     """ Load the extension in IPython and shim IPython's IFrame. """
-    ipython.register_magics(magic.CoverageMagic)
+    ipython.register_magics(CoverageMagic)
 
     # Attempt to make IPython IFrames interactive, doesn't seem to work though
     if "sandbox" not in IFrame.iframe:

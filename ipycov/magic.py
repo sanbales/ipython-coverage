@@ -36,11 +36,12 @@ class CoverageMagic(magic.Magics):
 
     @staticmethod
     def coverage_missing_notice(*args, **kwargs):
-        logging.error(f"""\
+        logging.error("""\
 The coverage module could not be found, install it by running
-`pip install coverage`. Ignoring: {args} and {kwargs}.""")
+`pip install coverage`. Ignoring: {args} and {kwargs}.\
+""".format(args=args, kwargs=kwargs))
 
-    @magic_arguments.magic_arguments()
+    @magic_arguments.magic_arguments(name="coverage")
     @magic_arguments.argument(
         "--branch", "-b", action="store_false",
         help="Measure branch coverage in addition to statement coverage.",
