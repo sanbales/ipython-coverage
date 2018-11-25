@@ -1,46 +1,52 @@
 import logging
 import os
+import shutil
 
 try:
-    import coverage
+    from coverage import Coverage, CoverageException
+    from coverage.cmdline import Opts
+
+    options = Opts()
+
+    coverage_options = [
+        getattr(options, option)
+        for option in dir(options)
+        if hasattr(getattr(options, option), "action")
+    ]
 except ImportError:
-    coverage = None
+    Coverage, CoverageException, Opts = None, Exception, None
+    coverage_options = []
 
 from IPython.display import IFrame
 from IPython.core import magic, magic_arguments
 
 
-if "sandbox" not in IFrame.iframe:
-    IFrame.iframe = IFrame.iframe.replace(
-        "allowfullscreen\n",
-        "allowfullscreen\n"
-        '            sandbox="allow-forms allow-same-origin allow-scripts"\n'
-    )
-
-
 @magic.magics_class
 class CoverageMagic(magic.Magics):
+    """ An IPython Magic class to hold the magic methods. """
+
+    HTML_REPORT_DIR = "htmlcov"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if coverage is None:
+        if Coverage is None:
             self.coverage = self.coverage_missing_notice
         # Default execution function used to actually run user code.
         self.default_runner = None
 
     @staticmethod
     def coverage_missing_notice(*args, **kwargs):
-        logging.error("""\
+        logging.error(f"""\
 The coverage module could not be found, install it by running
-`pip install coverage`.""")
+`pip install coverage`. Ignoring: {args} and {kwargs}.""")
 
     @magic_arguments.magic_arguments()
     @magic_arguments.argument(
-        '--branch', '-b', action='store_false',
+        "--branch", "-b", action="store_false",
         help="Measure branch coverage in addition to statement coverage.",
     )
     @magic_arguments.argument(
-        'statement', nargs='*',
+        "statement", nargs="*",
         help="""Code call statement to include in the code coverage analysis. 
         You can omit this in cell magic mode.""",
     )
@@ -67,7 +73,7 @@ The coverage module could not be found, install it by running
                     conflict_globs[var_name] = var_val
             global_variables.update(local_ns)
 
-        cov = coverage.Coverage(branch=branch)
+        cov = Coverage(branch=branch)
         exception = None
         try:
             cov.start()
@@ -83,11 +89,17 @@ The coverage module could not be found, install it by running
 
         cov.save()
 
-        cov.html_report()
+        try:
+            if os.path.exists(self.HTML_REPORT_DIR):
+                shutil.rmtree(self.HTML_REPORT_DIR)
+            cov.html_report()
+        except CoverageException:
+            return "No data to report."
+
         # TODO: add options for IFrame display
-        return IFrame(os.path.join("htmlcov/index.html"), width="100%", height=600)
-
-
-def load_ipython_extension(ipython):
-    """Load the extension in IPython."""
-    ipython.register_magics(CoverageMagic)
+        return IFrame(
+            # TODO: figure out why os.path.join messes up static
+            self.HTML_REPORT_DIR + "/index.html",
+            width="100%",
+            height=600,
+        )

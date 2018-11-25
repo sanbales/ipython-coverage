@@ -8,7 +8,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md'), encoding='utf-8').read()
 
 
-version = '0.0.0'
+version = '0.0.1'
 
 
 setup(
@@ -30,8 +30,8 @@ setup(
     keywords='testing coverage ipython',
     license='MIT',
     long_description=README,
-    name='ipycoverage',
-    packages=find_packages('.'),
+    name='ipython_coverage',
+    packages=find_packages(exclude=('tests',)),
     test_suite="tests",
     url='https://pypi.python.org/pypi/ipython-coverage',
     version=version,
