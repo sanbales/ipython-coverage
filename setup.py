@@ -24,7 +24,7 @@ setup(
     description="Coverage access via IPython",
     include_package_data=True,
     install_requires=[
-        "coverage>=3",
+        "coverage>=4",
         "ipython>=1.0",
     ],
     keywords="testing coverage ipython",
